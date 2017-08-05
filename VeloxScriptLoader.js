@@ -116,7 +116,8 @@
 		if(this.options.policy === "cdn"){
             url = libDef.cdn;
         }
-        url = url.replace("$VERSION", libDef.version) ;
+        url = url.replace("$VERSION", libDef.version)+"?version="+libDef.version ;
+
 		if(libDef.type === "css"){
 			if(this.loadedCSS[libDef.name]){
 				return callback() ;
