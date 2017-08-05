@@ -1,20 +1,31 @@
+
+
 ; (function (global, factory) {
         typeof exports === 'object' && typeof module !== 'undefined' ? module.exports = factory() :
         typeof define === 'function' && define.amd ? define(factory) :
         global.VeloxScriptLoader = factory() ;
 }(this, (function () { 'use strict';
+    
+
+    /**
+     * This callback is displayed as part of the Requester class.
+     * @callback CallbackWithError
+     * @param {*} err error message if any
+     * @param {*} [result] execution result
+     */
+
     /**
      * @typedef VeloxScriptLoaderOptions
      * @type {object}
-     * @property {cdn|bower} policy policy of lib loaded : get from cdn or bower directory
+     * @property {"cdn"|"bower"} policy policy of lib loaded : get from cdn or bower directory
      * @property {string} [bowerPath] if using bower policy, the path to bower folder 
      */
 
-     /**
+    /**
      * @typedef VeloxScriptLoaderLib
      * @type {object}
      * @property {string} name name of the lib (ex: jquery)
-     * @property {js|css} type type of the lib (js or css)
+     * @property {"js"|"css"} type type of the lib (js or css)
      * @property {string} version version if the lib
      * @property {string} cdn cdn path of the lib (put $VERSION to be replaced by the version)
      * @property {string} bowerPath path in bower (ex : mylib/dist/lib.min.js)
@@ -22,8 +33,8 @@
 
     /**
      * The Velox Script Loader
+     * @class VeloxScriptLoader
      * 
-     * @constructor
      * @param {VeloxScriptLoaderOptions} [options] script loading options, if nothing given, use CDN
      */
     function VeloxScriptLoader(options) {
@@ -40,6 +51,7 @@
     /**
      * set options
      * 
+     * @function VeloxScriptLoader#setOptions
      * @param {VeloxScriptLoaderOptions} [options] script loading options, if nothing given, use CDN
      */
     VeloxScriptLoader.prototype.setOptions = function(options){
@@ -60,8 +72,9 @@
     /**
      * Listen to library loading
      * 
+     * @function VeloxScriptLoader#addLoadListener
      * @param {string} libName the name of the lib to listen
-     * @param {function} listener called when the lib is loaded
+     * @param {CallbackWithError} listener called when the lib is loaded
      */
     VeloxScriptLoader.prototype.addLoadListener = function(libName, listener){
         if(!this.loadListeners[libName]){
@@ -73,6 +86,7 @@
     /**
      * Remove a listener
      * 
+     * @function VeloxScriptLoader#removeLoadListener
      * @param {string} libName the name of the lib to listen
      * @param {function} listener the listener to remove
      */
@@ -101,9 +115,9 @@
      * 
      * Note : for CSS, the callback is called immediatly
      * 
-     * 
+     * @function VeloxScriptLoader#loadOneFile
      * @param {VeloxScriptLoaderLib} libDef the lib definition to load
-     * @param {function} callback called when load is done
+     * @param {CallbackWithError} callback called when load is done
      */
     VeloxScriptLoader.prototype.loadOneFile = function(libDef, callback){
 		if(!callback){
@@ -157,8 +171,9 @@
     /**
      * Load a script
      * 
+     * @function VeloxScriptLoader#loadScript
      * @param {string} url the url of the script
-     * @param {function(Error)} callback called when script is loaded
+     * @param {CallbackWithError} callback called when script is loaded
      */
     VeloxScriptLoader.prototype.loadScript = function (url, callback) {
         var script = document.createElement("script");
@@ -187,8 +202,9 @@
     /**
      * Load a JSON
      * 
+     * @function VeloxScriptLoader#loadJSON
      * @param {string} url the url of the script
-     * @param {function(Error)} callback called when script is loaded
+     * @param {CallbackWithError} callback called when script is loaded
      */
     VeloxScriptLoader.prototype.loadJSON = function (url, callback) {
         if(this.loadedJSON[url]){
@@ -219,8 +235,9 @@
     /**
      * Load a CSS
      * 
+     * @function VeloxScriptLoader#loadCss
      * @param {string} url the url of CSS fiel
-     * @param {function(Error)} callback called when script is loaded
+     * @param {CallbackWithError} callback called when script is loaded
      */
     VeloxScriptLoader.prototype.loadCss = function (url, callback) {
 		var link = document.createElement("link");
@@ -245,8 +262,9 @@
      *    lib4 //lib4 will be loaded after lib1, lib2 and lib3 are loaded
      * ])
      * 
+     * @function VeloxScriptLoader#load
 	 * @param {VeloxScriptLoaderLib[]} libs array of libs to load
-	 * @param {function} [callback] called when libs are loaded
+	 * @param {CallbackWithError} [callback] called when libs are loaded
 	 */
 	VeloxScriptLoader.prototype.load = function(libs, callback){
         if(!callback){ callback = function(){} ; }
@@ -276,7 +294,7 @@
      * 
      * @private
      * @param {VeloxScriptLoaderLib|VeloxScriptLoaderLib[]} libDef a libe to load or an array of libs to load
-     * @param {function(Error)} callback called when libs are loaded
+     * @param {CallbackWithError} callback called when libs are loaded
      */
     VeloxScriptLoader.prototype._loadFiles = function(libDef, callback){
 		if(!Array.isArray(libDef)){
@@ -294,8 +312,9 @@
     /**
      * Execute many function in parallel
      * 
-     * @param {function(Error)[]} calls array of function to run
-     * @param {function(Error)} callback called when all calls are done
+     * @private
+     * @param {CallbackWithError[]} calls array of function to run
+     * @param {CallbackWithError} callback called when all calls are done
      */
     var parallel = function(calls, callback){
         var workers = calls.length ;
@@ -325,8 +344,9 @@
     /**
      * Execute many function in series
      * 
-     * @param {function(Error)[]} calls array of function to run
-     * @param {function(Error)} callback called when all calls are done
+     * @private
+     * @param {CallbackWithError[]} calls array of function to run
+     * @param {CallbackWithError} callback called when all calls are done
      */
     var series = function(calls, callback){
         if(calls.length === 0){ return callback(); }
@@ -351,3 +371,4 @@
 
     return new VeloxScriptLoader();
 })));
+
