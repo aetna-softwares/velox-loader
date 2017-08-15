@@ -23,8 +23,8 @@ declare type VeloxScriptLoaderOptions = {
  * @property {string} name name of the lib (ex: jquery)
  * @property {"js"|"css"} type type of the lib (js or css)
  * @property {string} version version if the lib
- * @property {string} cdn cdn path of the lib (put $VERSION to be replaced by the version)
- * @property {string} bowerPath path in bower (ex : mylib/dist/lib.min.js)
+ * @property {string} [cdn] cdn path of the lib (put $VERSION to be replaced by the version)
+ * @property {string} [bowerPath] path in bower (ex : mylib/dist/lib.min.js)
  */
 declare type VeloxScriptLoaderLib = {
     name: string;
@@ -108,10 +108,11 @@ declare class VeloxScriptLoader {
      *    lib4 //lib4 will be loaded after lib1, lib2 and lib3 are loaded
      * ])
      * @function VeloxScriptLoader#load
-     * @param {VeloxScriptLoaderLib[]} libs array of libs to load
+     * @param {*} libs array of libs to load
      * @param {CallbackWithError} [callback] called when libs are loaded
      */
-    load(libs: (VeloxScriptLoaderLib)[], callback?: CallbackWithError): void;
+    load(libs: any, callback?: CallbackWithError): void;
 
 }
 
+interface Window { veloxScriptLoader: VeloxScriptLoader; }

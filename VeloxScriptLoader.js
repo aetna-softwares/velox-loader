@@ -3,7 +3,7 @@
 ; (function (global, factory) {
         typeof exports === 'object' && typeof module !== 'undefined' ? module.exports = factory() :
         typeof define === 'function' && define.amd ? define(factory) :
-        global.VeloxScriptLoader = factory() ;
+        global.veloxScriptLoader = factory() ;
 }(this, (function () { 'use strict';
     
 
@@ -27,8 +27,8 @@
      * @property {string} name name of the lib (ex: jquery)
      * @property {"js"|"css"} type type of the lib (js or css)
      * @property {string} version version if the lib
-     * @property {string} cdn cdn path of the lib (put $VERSION to be replaced by the version)
-     * @property {string} bowerPath path in bower (ex : mylib/dist/lib.min.js)
+     * @property {string} [cdn] cdn path of the lib (put $VERSION to be replaced by the version)
+     * @property {string} [bowerPath] path in bower (ex : mylib/dist/lib.min.js)
      */
 
     /**
@@ -263,7 +263,7 @@
      * ])
      * 
      * @function VeloxScriptLoader#load
-	 * @param {VeloxScriptLoaderLib[]} libs array of libs to load
+	 * @param {*} libs array of libs to load
 	 * @param {CallbackWithError} [callback] called when libs are loaded
 	 */
 	VeloxScriptLoader.prototype.load = function(libs, callback){
