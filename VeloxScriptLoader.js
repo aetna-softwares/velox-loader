@@ -5,7 +5,10 @@
         typeof define === 'function' && define.amd ? define(factory) :
         global.veloxScriptLoader = factory() ;
 }(this, (function () { 'use strict';
-    
+
+    if(!console.debug){ console.debug = console.log ;}
+    if(!console.warn){ console.warn = console.log ;}
+    if(!console.error){ console.error = console.log ;}
 
     /**
      * This callback is displayed as part of the Requester class.
