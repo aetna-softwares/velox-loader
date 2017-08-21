@@ -139,7 +139,7 @@
 			if(this.loadedCSS[libDef.name]){
 				return callback() ;
 			}
-			this.loadedCSS[libDef] = new Date() ;
+			this.loadedCSS[libDef.name] = new Date() ;
 			this.loadCss(url, function(){
                 this._emitLoad(libDef.Oname) ;
 				callback() ;
