@@ -253,6 +253,28 @@
 		callback() ;
     };
     
+    /**
+     * Load CSS code
+     * 
+     * @function VeloxScriptLoader#loadCssCode
+     * @param {string} code the CSS code to load
+     */
+    VeloxScriptLoader.prototype.loadCssCode = function (code) {
+        if(!this.loadedCSS[code]){
+            var head = document.getElementsByTagName('head')[0];
+            var s = document.createElement('style');
+            s.setAttribute('type', 'text/css');
+            if (s.styleSheet) {   // IE
+                s.styleSheet.cssText = code;
+            } else {                // the world
+                s.appendChild(document.createTextNode(code));
+            }
+            head.appendChild(s);
+    
+            this.loadedCSS[code] = new Date() ;
+        }
+    };
+    
     
 	/**
      * Load a set of libs.
