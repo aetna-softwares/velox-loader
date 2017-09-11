@@ -186,7 +186,7 @@
 	    script.onload = function(_, isAbort) {
 	        if (!script.readyState || "complete" === script.readyState) {
 	            if (isAbort){
-					callback("aborted") ;
+					callback("Script loading of URL "+url+" has been aborted") ;
 	            }else{
 	                callback() ;
 				}
@@ -195,8 +195,8 @@
 		
 		script.onreadystatechange = script.onload ;
 		
-	    script.onerror = function (ev) { 
-			callback(ev); 
+	    script.onerror = function () { 
+			callback("Can't load library from URL "+url); 
 		};
 		
 	    document.getElementsByTagName("head")[0].appendChild(script);
