@@ -178,7 +178,7 @@
      * @param {string} url the url of the script
      * @param {CallbackWithError} callback called when script is loaded
      */
-    VeloxScriptLoader.prototype.loadScript = function (url, callback) {
+    VeloxScriptLoader.loadScript = function (url, callback) {
         var script = document.createElement("script");
 	    script.async = true;
 	    script.type = "text/javascript";
@@ -200,6 +200,17 @@
 		};
 		
 	    document.getElementsByTagName("head")[0].appendChild(script);
+    } ;
+    
+    /**
+     * Load a script
+     * 
+     * @function VeloxScriptLoader#loadScript
+     * @param {string} url the url of the script
+     * @param {CallbackWithError} callback called when script is loaded
+     */
+    VeloxScriptLoader.prototype.loadScript = function (url, callback) {
+        VeloxScriptLoader.loadScript(url, callback) ;
     } ;
 
     /**
