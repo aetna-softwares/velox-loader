@@ -20,8 +20,9 @@
     /**
      * @typedef VeloxScriptLoaderOptions
      * @type {object}
-     * @property {"cdn"|"bower"} policy policy of lib loaded : get from cdn or bower directory
+     * @property {"cdn"|"bower"|"npm"} policy policy of lib loaded : get from cdn or bower directory
      * @property {string} [bowerPath] if using bower policy, the path to bower folder 
+     * @property {string} [npmPath] if using npm policy, the path to node_modules folder 
      */
 
     /**
@@ -32,6 +33,7 @@
      * @property {string} version version if the lib
      * @property {string} [cdn] cdn path of the lib (put $VERSION to be replaced by the version)
      * @property {string} [bowerPath] path in bower (ex : mylib/dist/lib.min.js)
+     * @property {string} [npmPath] path in node_modules (ex : mylib/dist/lib.min.js)
      */
 
     /**
@@ -67,8 +69,14 @@
         if(this.options.policy === "bower" && !this.options.bowerPath){
             throw "If you are using bower policy, you must give the bowerPath" ;
         }
+        if(this.options.policy === "npm" && !this.options.npmPath){
+            throw "If you are using npm policy, you must give the npmPath" ;
+        }
         if(this.options.bowerPath && this.options.bowerPath[this.options.bowerPath.length-1] !== "/"){
             this.options.bowerPath = this.options.bowerPath+"/" ;
+        }
+        if(this.options.npmPath && this.options.npmPath[this.options.npmPath.length-1] !== "/"){
+            this.options.npmPath = this.options.npmPath+"/" ;
         }
     } ;
 
@@ -130,7 +138,9 @@
         }
         
         var url = this.options.bowerPath+libDef.bowerPath ;
-		if(this.options.policy === "cdn"){
+		if(this.options.policy === "npm"){
+            url = this.options.npmPath+libDef.npmPath ;
+        }else if(this.options.policy === "cdn"){
             url = libDef.cdn;
         }
         url = url.replace("$VERSION", libDef.version)+"?version="+libDef.version ;
