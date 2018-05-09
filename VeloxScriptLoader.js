@@ -137,11 +137,11 @@
 			} ;
         }
         
-        var url = this.options.bowerPath+libDef.bowerPath ;
+        var url = libDef.cdn ;
 		if(this.options.policy === "npm"){
             url = this.options.npmPath+libDef.npmPath ;
-        }else if(this.options.policy === "cdn"){
-            url = libDef.cdn;
+        }else if(this.options.policy === "bower"){
+            url = this.options.bowerPath+libDef.bowerPath;
         }
         url = url.replace("$VERSION", libDef.version)+"?version="+libDef.version ;
 
