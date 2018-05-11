@@ -138,7 +138,9 @@
         }
         
         var url = libDef.cdn ;
-		if(this.options.policy === "npm"){
+        if(libDef.localPath){
+            url = libDef.localPath ;
+        }else if(this.options.policy === "npm"){
             url = this.options.npmPath+libDef.npmPath ;
         }else if(this.options.policy === "bower"){
             url = this.options.bowerPath+libDef.bowerPath;
