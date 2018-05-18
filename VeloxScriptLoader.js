@@ -113,12 +113,21 @@
      * 
      * @private
      */
-    VeloxScriptLoader.prototype._emitLoad = function(libName){
+    VeloxScriptLoader.prototype._emitLoad = function(libName, callback){
+        var calls = [] ;
         if(this.loadListeners[libName]){
             this.loadListeners[libName].forEach(function(l){
-                l() ;
+                calls.push(function(cb){
+                    if(l.length === 1){
+                        l(cb) ;
+                    }else{
+                        l();
+                        cb() ;
+                    }
+                }) ;
             }) ;
         }
+        series(calls, callback) ;
     } ;
 
     /**
@@ -153,8 +162,7 @@
 			}
 			this.loadedCSS[libDef.name] = new Date() ;
 			this.loadCss(url, function(){
-                this._emitLoad(libDef.Oname) ;
-				callback() ;
+                this._emitLoad(libDef.name, callback) ;
 			}.bind(this));
 		}else if(libDef.type === "json"){
             this.loadJSON(url, callback) ;
@@ -176,8 +184,7 @@
                 if(err){ return callback(err) ;}
 				this.loadedScripts[libDef.name] = new Date() ;
 				delete this.loadingScripts[libDef.name] ;
-				this._emitLoad(libDef.name) ;
-				callback() ;
+				this._emitLoad(libDef.name, callback) ;
 			}.bind(this));
 		}
 	}  ;
