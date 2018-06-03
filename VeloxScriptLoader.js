@@ -161,7 +161,7 @@
 				return callback() ;
 			}
 			this.loadedCSS[libDef.name] = new Date() ;
-			this.loadCss(url, function(){
+			this.loadCss(url, libDef.name, function(){
                 this._emitLoad(libDef.name, callback) ;
 			}.bind(this));
 		}else if(libDef.type === "json"){
@@ -270,13 +270,21 @@
      * 
      * @function VeloxScriptLoader#loadCss
      * @param {string} url the url of CSS fiel
+     * @param {string} [name] the name
      * @param {CallbackWithError} callback called when script is loaded
      */
-    VeloxScriptLoader.prototype.loadCss = function (url, callback) {
+    VeloxScriptLoader.prototype.loadCss = function (url, name, callback) {
+        if(typeof(name) === "function"){
+            callback = name;
+            name = null;
+        }
 		var link = document.createElement("link");
 	    link.rel = "stylesheet";
 	    link.type = "text/css";
-	    link.href = url;
+        link.href = url;
+        if(name){
+            link.id = name;
+        }
 		
 	    document.getElementsByTagName("head")[0].appendChild(link);
 		
