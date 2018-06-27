@@ -29,7 +29,7 @@
      * @typedef VeloxScriptLoaderLib
      * @type {object}
      * @property {string} name name of the lib (ex: jquery)
-     * @property {"js"|"css"} type type of the lib (js or css)
+     * @property {"js"|"css"|"json"|"plain"} type type of the lib (js or css)
      * @property {string} version version if the lib
      * @property {string} [cdn] cdn path of the lib (put $VERSION to be replaced by the version)
      * @property {string} [bowerPath] path in bower (ex : mylib/dist/lib.min.js)
@@ -46,7 +46,7 @@
         this.loadedScripts = {} ;
 	    this.loadingScripts = {} ;
         this.loadedCSS = {} ;
-        this.loadedJSON = {} ;
+        this.loadedPlain = {} ;
         this.loadListeners = {} ;
         this.loadInProgress = 0 ;
 
@@ -166,6 +166,8 @@
 			}.bind(this));
 		}else if(libDef.type === "json"){
             this.loadJSON(url, callback) ;
+		}else if(libDef.type === "plain"){
+            this.loadPlain(url, callback) ;
 		}else{
 			if(this.loadedScripts[libDef.name]){
 				//already loaded
@@ -240,8 +242,27 @@
      * @param {CallbackWithError} callback called when script is loaded
      */
     VeloxScriptLoader.prototype.loadJSON = function (url, callback) {
-        if(this.loadedJSON[url]){
-            return callback(null, this.loadedJSON[url]) ;
+        this.loadPlain(url, function(err, responseResult){
+            if(err){ return callback(err) ;}
+            if(responseResult){
+                try{
+                    responseResult = JSON.parse(responseResult) ;
+                }catch(e){}
+            }
+            callback(null, responseResult);
+        }) ;
+    } ;
+    
+    /**
+     * Load a plain file
+     * 
+     * @function VeloxScriptLoader#loadPlain
+     * @param {string} url the url of the script
+     * @param {CallbackWithError} callback called when script is loaded
+     */
+    VeloxScriptLoader.prototype.loadPlain = function (url, callback) {
+        if(this.loadedPlain[url]){
+            return callback(null, this.loadedPlain[url]) ;
         }
         var xhr = new XMLHttpRequest();
         xhr.open("GET", url);
@@ -249,13 +270,8 @@
             
             if (xhr.readyState === 4){
                 var responseResult = xhr.responseText ;
-                if(responseResult){
-                    try{
-                        responseResult = JSON.parse(responseResult) ;
-                    }catch(e){}
-                }
                 if(xhr.status >= 200 && xhr.status < 300) {
-                    this.loadedJSON[url] = responseResult ;
+                    this.loadedPlain[url] = responseResult ;
                     callback(null, responseResult);
                 } else {
                     callback(responseResult||xhr.status);
