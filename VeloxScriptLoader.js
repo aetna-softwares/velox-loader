@@ -270,7 +270,7 @@
             
             if (xhr.readyState === 4){
                 var responseResult = xhr.responseText ;
-                if(xhr.status >= 200 && xhr.status < 300) {
+                if((xhr.status >= 200 && xhr.status < 300) || (xhr.status === 0 && xhr.responseText)) {
                     this.loadedPlain[url] = responseResult ;
                     callback(null, responseResult);
                 } else {
